@@ -3,185 +3,449 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Lotto Analytics | ระบบวิเคราะห์สถิติสลากกินแบ่งรัฐบาล</title>
-  <link href="https://googleapis.com" rel="stylesheet">
+  <title>LOTTO DATA LAB | ศูนย์รวมสถิติและข้อมูลสลากกินแบ่งรัฐบาล</title>
+  <link rel="preconnect" href="https://googleapis.com">
+  <link rel="preconnect" href="https://gstatic.com" crossorigin>
+  <link href="https://googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root { --primary: #1e3a8a; --accent: #dc2626; --bg: #f1f5f9; --card: #ffffff; }
-    body { font-family: 'Prompt', sans-serif; background: var(--bg); color: #1e293b; margin: 0; padding: 0; }
-    .navbar { background: var(--primary); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
-    .navbar h1 { margin: 0; font-size: 20px; }
-    .btn-ads { background: #f59e0b; color: #000; text-decoration: none; padding: 8px 14px; border-radius: 6px; font-weight: 600; font-size: 13px; }
-    .container { max-width: 850px; margin: 20px auto; padding: 0 15px; }
-    .ad-banner { background: #e2e8f0; border: 2px dashed #94a3b8; border-radius: 10px; padding: 20px; text-align: center; margin: 20px 0; transition: 0.2s; }
-    .ad-banner:hover { background: #cbd5e1; }
-    .ad-banner a { text-decoration: none; color: #334155; display: block; }
-    .ad-tag { font-size: 11px; background: #64748b; color: white; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 5px; }
-    .box { background: var(--card); padding: 25px; border-radius: 14px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 20px; }
-    .status-bar { background: #dcfce7; color: #166534; padding: 10px 15px; border-radius: 8px; font-size: 14px; font-weight: 600; margin-bottom: 15px; }
-    .next-target { background: #eff6ff; border-left: 4px solid var(--primary); padding: 12px 15px; font-size: 16px; font-weight: 600; color: var(--primary); margin-bottom: 20px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 15px; }
-    .stat-card { background: #f8fafc; border: 1px solid #e2e8f0; padding: 18px; border-radius: 12px; text-align: center; }
-    .stat-num { font-size: 36px; font-weight: 700; color: var(--accent); margin: 8px 0; }
-    .rank-list { list-style: none; padding: 0; margin: 0; }
-    .rank-list li { padding: 12px 15px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
-    .pill { background: #fee2e2; color: #991b1b; padding: 4px 10px; border-radius: 20px; font-size: 13px; font-weight: 600; }
-    .footer { text-align: center; font-size: 12px; color: #64748b; padding: 30px 15px; border-top: 1px solid #e2e8f0; margin-top: 40px; }
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --brand: #111827;
+      --accent: #e11d48;
+      --accent-soft: #ffe4e6;
+      --gold: #d97706;
+      --gold-bg: #fef3c7;
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'IBM Plex Sans Thai', sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .num-font {
+      font-family: 'Plus Jakarta Sans', 'IBM Plex Sans Thai', sans-serif;
+      letter-spacing: -0.03em;
+    }
+
+    /* Header */
+    header {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .nav-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 19px;
+      color: var(--brand);
+      text-decoration: none;
+    }
+
+    .logo-badge {
+      background: var(--brand);
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-btn {
+      background: var(--brand);
+      color: #fff;
+      text-decoration: none;
+      padding: 9px 18px;
+      border-radius: 99px;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover {
+      background: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    /* Main Layout */
+    main {
+      max-width: 960px;
+      margin: 28px auto;
+      padding: 0 20px;
+    }
+
+    /* Hero Banner */
+    .hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.1);
+    }
+
+    .live-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 6px 14px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #cbd5e1;
+      margin-bottom: 12px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #10b981;
+    }
+
+    .hero h1 {
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .hero p {
+      color: #94a3b8;
+      font-size: 14px;
+    }
+
+    .countdown-box {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 16px 24px;
+      border-radius: 16px;
+      text-align: center;
+      min-width: 210px;
+    }
+
+    .countdown-label {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-bottom: 4px;
+    }
+
+    .countdown-val {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fbbf24;
+    }
+
+    /* Native Ad Space */
+    .sponsor-slot {
+      background: var(--surface);
+      border: 1px dashed #cbd5e1;
+      border-radius: 16px;
+      padding: 16px 24px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      transition: all 0.2s;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .sponsor-slot:hover {
+      border-color: var(--gold);
+      background: #fffbeb;
+    }
+
+    .sponsor-badge {
+      background: var(--gold-bg);
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    /* Bento Grid Cards */
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    @media (max-width: 768px) {
+      .bento-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 18px;
+      text-align: center;
+      position: relative;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.08);
+      border-color: #cbd5e1;
+    }
+
+    .card.featured {
+      border: 2px solid var(--accent);
+      background: linear-gradient(180deg, #fff1f2 0%, #ffffff 45%);
+    }
+
+    .card-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .card-number {
+      font-size: 38px;
+      font-weight: 800;
+      color: var(--brand);
+      line-height: 1.1;
+      margin-bottom: 10px;
+    }
+
+    .card.featured .card-number {
+      color: var(--accent);
+    }
+
+    .card-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    .copy-btn {
+      background: #f1f5f9;
+      border: none;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 99px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .copy-btn:hover {
+      background: var(--brand);
+      color: #fff;
+    }
+
+    /* Interactive Tabs Section */
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+      white-space: nowrap;
+    }
+
+    .tab-btn.active {
+      background: var(--brand);
+      color: #fff;
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Ranking Bars */
+    .rank-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #f1f5f9;
+      gap: 15px;
+    }
+
+    .rank-item:last-child { border-bottom: none; }
+
+    .rank-num-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      color: var(--brand);
+    }
+
+    .rank-item:first-child .rank-num-badge {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .bar-wrap {
+      flex: 1;
+      max-width: 260px;
+      background: #f1f5f9;
+      height: 8px;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: var(--brand);
+      border-radius: 99px;
+    }
+
+    .rank-item:first-child .bar-fill { background: var(--accent); }
+
+    /* History Table */
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .history-table th {
+      text-align: left;
+      color: var(--text-muted);
+      font-weight: 600;
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .history-table td {
+      padding: 12px 8px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    /* Toast Notification */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--brand);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 100;
+    }
+
+    #toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    footer {
+      max-width: 960px;
+      margin: 40px auto;
+      padding: 24px 20px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
   </style>
 </head>
 <body>
 
-<div class="navbar">
-  <h1>📊 AI Lotto Analytics</h1>
-  <a href="https://line.me" target="_blank" class="btn-ads">📢 ลงโฆษณาบนเว็บนี้</a>
-</div>
-
-<div class="container">
-  <div class="ad-banner">
-    <a href="https://line.me" target="_blank">
-      <span class="ad-tag">พื้นที่โฆษณา VIP #1 (ขนาด 728x90)</span>
-      <div style="font-weight: 600; font-size: 16px; margin-top: 4px;">ว่างให้เช่า! เหมาะสำหรับร้านลอตเตอรี่ถูกกฎหมาย / เบอร์มงคล / สายมู</div>
-      <div style="font-size: 13px; color: #475569;">คลิกที่นี่เพื่อติดต่อลงป้ายแบนเนอร์ (อัปเดตอัตโนมัติทุกงวด)</div>
+<header>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <span class="logo-badge">DATA LAB</span>
+      <span>สถิติสลากกินแบ่งฯ</span>
     </a>
+    <a href="https://line.me" target="_blank" class="nav-btn">ติดต่อลงโฆษณา</a>
   </div>
+</header>
 
-  <div class="box">
-    <div class="status-bar" id="status">⏳ กำลังโหลดข้อมูล...</div>
-    <p id="meta-info" style="font-size: 14px; color: #475569;">ฐานข้อมูลคำนวณ: <strong>30 งวดย้อนหลัง</strong> | ข้อมูลล่าสุด: <strong>กำลังโหลด...</strong></p>
-    <div class="next-target" id="next-draw">🎯 เป้าหมายวิเคราะห์สถิติ: กำลังคำนวณงวดถัดไป...</div>
-
-    <h2 style="font-size: 18px; margin-bottom: 15px;">🏆 ชุดตัวเลขคาดคะเนความถี่สูงสุด (AI Statistical Picks)</h2>
-    <div class="grid">
-      <div class="stat-card">
-        <div style="font-size: 14px; color: #475569;">ชุด 6 หลัก (ความถี่รายหลัก)</div>
-        <div class="stat-num" id="pick-6">------</div>
-        <small style="color: #64748b;">สถิติสูงสุดแต่ละตำแหน่ง</small>
-      </div>
-      <div class="stat-card">
-        <div style="font-size: 14px; color: #475569;">เลขท้าย 2 ตัว</div>
-        <div class="stat-num" id="pick-2">--</div>
-        <small id="desc-2" style="color: #64748b;">-</small>
-      </div>
-      <div class="stat-card">
-        <div style="font-size: 14px; color: #475569;">เลขหน้า 3 ตัว</div>
-        <div class="stat-num" id="pick-f3">---</div>
-        <small id="desc-f3" style="color: #64748b;">-</small>
-      </div>
-      <div class="stat-card">
-        <div style="font-size: 14px; color: #475569;">เลขท้าย 3 ตัว</div>
-        <div class="stat-num" id="pick-b3">---</div>
-        <small id="desc-b3" style="color: #64748b;">-</small>
-      </div>
-    </div>
-  </div>
-
-  <div class="ad-banner">
-    <a href="https://line.me" target="_blank">
-      <span class="ad-tag">พื้นที่โฆษณา #2</span>
-      <div style="font-weight: 600; font-size: 15px;">โปรโมทสินค้าหรือบริการของคุณตรงนี้ คนเข้าดูคึกคักช่วงก่อนวันหวยออก</div>
-      <div style="font-size: 12px; color: #475569;">ติดต่อแอดมินเพื่อจองพื้นที่โฆษณารายงวด / รายเดือน</div>
-    </a>
-  </div>
-
-  <div class="box">
-    <h3 style="margin-top: 0; font-size: 17px;">📈 5 อันดับเลขท้าย 2 ตัวที่ออกซ้ำบ่อยที่สุด (30 งวดล่าสุด)</h3>
-    <ul class="rank-list" id="rank-2"></ul>
-  </div>
-</div>
-
-<div class="footer">
-  <p><strong>ข้อกำหนดและเงื่อนไขการใช้งาน (Disclaimer):</strong></p>
-  <p>เว็บไซต์นี้จัดทำขึ้นเพื่อรวบรวมและวิเคราะห์ข้อมูลทางสถิติความน่าจะเป็นจากผลรางวัลสลากกินแบ่งรัฐบาลย้อนหลังเท่านั้น<br>
-  ไม่มีส่วนเกี่ยวข้องกับการพนัน หวยใต้ดิน หรือการรับแทงพนันออนไลน์ทุกรูปแบบ โปรดใช้วิจารณญาณในการรับข้อมูลและสนับสนุนเฉพาะสลากกินแบ่งรัฐบาลที่ถูกกฎหมาย</p>
-  <p style="margin-top: 15px;">© 2026 AI Lotto Analytics | <a href="https://line.me" style="color: #1e3a8a;">ติดต่อลงโฆษณา / สอบถามข้อมูล</a></p>
-</div>
-
-<script src="data.js"></script>
-<script>
-  function getItem(arr, index) {
-    return arr.slice(index, index + 1).shift();
-  }
-
-  function getNextDrawDate(latestDateStr) {
-    const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
-    const parts = String(latestDateStr).trim().split(/\s+/);
-    const day = parseInt(getItem(parts, 0), 10);
-    const monthIdx = months.indexOf(getItem(parts, 1));
-    const year = parseInt(getItem(parts, 2), 10);
-
-    if (day < 15) {
-      return `16 ${getItem(months, monthIdx)} ${year}`;
-    } else {
-      const nextMonthIdx = (monthIdx + 1) % 12;
-      const nextYear = nextMonthIdx === 0 ? year + 1 : year;
-      return `1 ${getItem(months, nextMonthIdx)} ${nextYear}`;
-    }
-  }
-
-  function splitThreeDigits(val) {
-    const s = String(val).replace(/[^0-9]/g, '').padStart(6, '0');
-    return [s.slice(0, 3), s.slice(3, 6)];
-  }
-
-  (function() {
-    const rows = window.LOTTO_DATA;
-    if (!rows || !Array.isArray(rows) || rows.length === 0) return;
-
-    const latestRow = rows.slice(-1).shift();
-    const latestDate = String(getItem(latestRow, 1));
-
-    document.getElementById('status').innerText = '✅ ประมวลผลสถิติ 30 งวดล่าสุดเรียบร้อย (อัปเดตอัตโนมัติ 100%)';
-    document.getElementById('meta-info').innerHTML = `ฐานข้อมูลคำนวณ: <strong>${rows.length} งวดย้อนหลัง</strong> | งวดอ้างอิงล่าสุด: <strong>${latestDate}</strong>`;
-    document.getElementById('next-draw').innerText = `🎯 เป้าหมายวิเคราะห์สถิติ: งวดวันที่ ${getNextDrawDate(latestDate)}`;
-
-    const freq2 = {}, freqF3 = {}, freqB3 = {};
-    const digitPos = [{}, {}, {}, {}, {}, {}];
-
-    rows.forEach(function(r) {
-      const p1 = String(getItem(r, 2)).replace(/[^0-9]/g, '').padStart(6, '0');
-      for (let i = 0; i < 6; i++) {
-        const d = p1.charAt(i);
-        const posObj = getItem(digitPos, i);
-        posObj[d] = (posObj[d] || 0) + 1;
-      }
-      splitThreeDigits(getItem(r, 3)).forEach(function(n) { if (n) freqF3[n] = (freqF3[n] || 0) + 1; });
-      splitThreeDigits(getItem(r, 4)).forEach(function(n) { if (n) freqB3[n] = (freqB3[n] || 0) + 1; });
-      const b2 = String(getItem(r, 5)).replace(/[^0-9]/g, '').padStart(2, '0');
-      freq2[b2] = (freq2[b2] || 0) + 1;
-    });
-
-    const best6 = digitPos.map(function(pos) {
-      const sorted = Object.entries(pos).sort(function(a, b) { return getItem(b, 1) - getItem(a, 1); });
-      const top = sorted.shift();
-      return top ? getItem(top, 0) : '0';
-    }).join('');
-    document.getElementById('pick-6').innerText = best6;
-
-    const sort2 = Object.entries(freq2).sort(function(a, b) { return getItem(b, 1) - getItem(a, 1); });
-    const top2 = getItem(sort2, 0);
-    document.getElementById('pick-2').innerText = getItem(top2, 0);
-    document.getElementById('desc-2').innerText = `ออกซ้ำสูงสุด ${getItem(top2, 1)} ครั้ง`;
-
-    const sortF3 = Object.entries(freqF3).sort(function(a, b) { return getItem(b, 1) - getItem(a, 1); });
-    const topF3 = getItem(sortF3, 0);
-    document.getElementById('pick-f3').innerText = getItem(topF3, 0);
-    document.getElementById('desc-f3').innerText = `ออกซ้ำสูงสุด ${getItem(topF3, 1)} ครั้ง`;
-
-    const sortB3 = Object.entries(freqB3).sort(function(a, b) { return getItem(b, 1) - getItem(a, 1); });
-    const topB3 = getItem(sortB3, 0);
-    document.getElementById('pick-b3').innerText = getItem(topB3, 0);
-    document.getElementById('desc-b3').innerText = `ออกซ้ำสูงสุด ${getItem(topB3, 1)} ครั้ง`;
-
-    document.getElementById('rank-2').innerHTML = sort2.slice(0, 5).map(function(item, idx) {
-      const num = getItem(item, 0);
-      const count = getItem(item, 1);
-      const chance = Math.min(95, (75 + count * 5.5)).toFixed(1);
-      return `<li>
-        <div><strong>อันดับ ${idx + 1}: เลข ${num}</strong> <span style="font-size:13px; color:#64748b;">(ค่าความถี่ทางสถิติ ${chance}%)</span></div>
-        <span class="pill">ออกซ้ำ ${count} ครั้ง</span>
-      </li>`;
-    }).join('');
-  })();
-</script>
-
-</body>
-</html>
+<main>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div>
+      <div class="live-pill">
+        <span class="dot"></span>
