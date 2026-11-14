@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Lotto Analytics | ระบบวิเคราะห์สถิติสลากกินแบ่งรัฐบาล</title>
+  <link href="https://googleapis.com" rel="stylesheet">
+  <style>
+    :root { --primary: #1e3a8a; --accent: #dc2626; --bg: #f1f5f9; --card: #ffffff; }
+    body { font-family: 'Prompt', sans-serif; background: var(--bg); color: #1e293b; margin: 0; padding: 0; }
+    .navbar { background: var(--primary); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+    .navbar h1 { margin: 0; font-size: 20px; }
+    .btn-ads { background: #f59e0b; color: #000; text-decoration: none; padding: 8px 14px; border-radius: 6px; font-weight: 600; font-size: 13px; }
+    .container { max-width: 850px; margin: 20px auto; padding: 0 15px; }
+    .ad-banner { background: #e2e8f0; border: 2px dashed #94a3b8; border-radius: 10px; padding: 20px; text-align: center; margin: 20px 0; transition: 0.2s; }
+    .ad-banner:hover { background: #cbd5e1; }
+    .ad-banner a { text-decoration: none; color: #334155; display: block; }
+    .ad-tag { font-size: 11px; background: #64748b; color: white; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 5px; }
+    .box { background: var(--card); padding: 25px; border-radius: 14px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 20px; }
+    .status-bar { background: #dcfce7; color: #166534; padding: 10px 15px; border-radius: 8px; font-size: 14px; font-weight: 600; margin-bottom: 15px; }
+    .next-target { background: #eff6ff; border-left: 4px solid var(--primary); padding: 12px 15px; font-size: 16px; font-weight: 600; color: var(--primary); margin-bottom: 20px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 15px; }
+    .stat-card { background: #f8fafc; border: 1px solid #e2e8f0; padding: 18px; border-radius: 12px; text-align: center; }
+    .stat-num { font-size: 36px; font-weight: 700; color: var(--accent); margin: 8px 0; }
+    .rank-list { list-style: none; padding: 0; margin: 0; }
+    .rank-list li { padding: 12px 15px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
+    .pill { background: #fee2e2; color: #991b1b; padding: 4px 10px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+    .footer { text-align: center; font-size: 12px; color: #64748b; padding: 30px 15px; border-top: 1px solid #e2e8f0; margin-top: 40px; }
+  </style>
+</head>
+<body>
+
+<div class="navbar">
+  <h1>📊 AI Lotto Analytics</h1>
+  <a href="https://line.me" target="_blank" class="btn-ads">📢 ลงโฆษณาบนเว็บนี้</a>
+</div>
+
+<div class="container">
+  <div class="ad-banner">
+    <a href="https://line.me" target="_blank">
+      <span class="ad-tag">พื้นที่โฆษณา VIP #1 (ขนาด 728x90)</span>
+      <div style="font-weight: 600; font-size: 16px; margin-top: 4px;">ว่างให้เช่า! เหมาะสำหรับร้านลอตเตอรี่ถูกกฎหมาย / เบอร์มงคล / สายมู</div>
+      <div style="font-size: 13px; color: #475569;">คลิกที่นี่เพื่อติดต่อลงป้ายแบนเนอร์ (อัปเดตอัตโนมัติทุกงวด)</div>
+    </a>
+  </div>
+
+  <div class="box">
+    <div class="status-bar" id="status">⏳ กำลังโหลดข้อมูลเวอร์ชันใหม่...</div>
+    <p id="meta-info" style="font-size: 14px; color: #475569;">ฐานข้อมูลคำนวณ: <strong>30 งวดย้อนหลัง</strong> | ข้อมูลล่าสุด: <strong>กำลังโหลด...</strong></p>
+    <div class="next-target" id="next-draw">🎯 เป้าหมายวิเคราะห์สถิติ: กำลังคำนวณงวดถัดไป...</div>
+
+    <h2 style="font-size: 18px; margin-bottom: 15px;">🏆 ชุดตัวเลขความถี่สูงสุด (AI Statistical Picks)</h2>
+    <div class="grid">
+      <div class="stat-card">
+        <div style="font-size: 14px; color: #475569;">ชุด 6 หลัก (ความถี่รายหลัก)</div>
+        <div class="stat-num" id="pick-6">------</div>
+        <small style="color: #64748b;">สถิติสูงสุดแต่ละตำแหน่ง</small>
+      </div>
+      <div class="stat-card">
+        <div style="font-size: 14px; color: #475569;">เลขท้าย 2 ตัว</div>
+        <div class="stat-num" id="pick-2">--</div>
+        <small id="desc-2" style="color: #64748b;">-</small>
+      </div>
+      <div class="stat-card">
+        <div style="font-size: 14px; color: #475569;">เลขหน้า 3 ตัว</div>
+        <div class="stat-num" id="pick-f3">---</div>
+        <small id="desc-f3" style="color: #64748b;">-</small>
+      </div>
+      <div class="stat-card">
+        <div style="font-size: 14px; color: #475569;">เลขท้าย 3 ตัว</div>
+        <div class="stat-num" id="pick-b3">---</div>
+        <small id="desc-b3" style="color: #64748b;">-</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="ad-banner">
+    <a href="https://line.me" target="_blank">
+      <span class="ad-tag">พื้นที่โฆษณา #2</span>
+      <div style="font-weight: 600; font-size: 15px;">โปรโมทสินค้าหรือบริการของคุณตรงนี้ คนเข้าดูคึกคักช่วงก่อนวันหวยออก</div>
+      <div style="font-size: 12px; color: #475569;">ติดต่อแอดมินเพื่อจองพื้นที่โฆษณารายงวด / รายเดือน</div>
+    </a>
+  </div>
+
+  <div class="box">
+    <h3 style="margin-top: 0; font-size: 17px;">📈 สถิติอันดับเลขท้าย 2 ตัวที่ออกซ้ำบ่อยที่สุด (30 งวดล่าสุด)</h3>
+    <ul class="rank-list" id="rank-2"></ul>
+  </div>
+</div>
+
+<div class="footer">
+  <p><strong>ข้อกำหนดและเงื่อนไขการใช้งาน (Disclaimer):</strong></p>
+  <p>เว็บไซต์นี้จัดทำขึ้นเพื่อรวบรวมและวิเคราะห์ข้อมูลทางสถิติความน่าจะเป็นจากผลรางวัลสลากกินแบ่งรัฐบาลย้อนหลังเท่านั้น<br>
+  ไม่มีส่วนเกี่ยวข้องกับการพนัน หวยใต้ดิน หรือการรับแทงพนันออนไลน์ทุกรูปแบบ โปรดใช้วิจารณญาณในการรับข้อมูลและสนับสนุนเฉพาะสลากกินแบ่งรัฐบาลที่ถูกกฎหมาย</p>
+  <p style="margin-top: 15px;">© 2026 AI Lotto Analytics | <a href="https://line.me" style="color: #1e3a8a;">ติดต่อลงโฆษณา / สอบถามข้อมูล</a></p>
+</div>
+
+<script>
+  const SCRIPT_ID = 'AKfycbzI7JJkmApts-WadnL8dMjP07b1FT4gfMvPylKXXuNmVOTJYzTjRj6wdO3VKo5DHyz_';
+  const s = document.createElement('script');
+  s.src = 'https://google.com' + SCRIPT_ID + '/exec';
+  s.onload = function() { renderStats(); };
+  s.onerror = function() { document.getElementById('status').innerText = '⚠️ โหลดสคริปต์ไม่สำเร็จ'; };
+  document.body.appendChild(s);
+
+  function getItem(arr, index) {
+    return arr.slice(index, index + 1).shift();
+  }
+
+  function getNextDrawDate(latestDateStr) {
+    const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+    const parts = String(latestDateStr).trim().split(/\s+/);
+    const day = parseInt(getItem(parts, 0), 10);
+    const monthIdx = months.indexOf(getItem(parts, 1));
+    const year = parseInt(getItem(parts, 2), 10);
+
+    if (day < 15) {
+      return `16 ${getItem(months, monthIdx)} ${year}`;
+    } else {
+      const nextMonthIdx = (monthIdx + 1) % 12;
+      const nextYear = nextMonthIdx === 0 ? year + 1 : year;
+      return `1 ${getItem(months, nextMonthIdx)} ${nextYear}`;
+    }
+  }
+
+  function splitThreeDigits(val) {
+    const s = String(val).replace(/[^0-9]/g, '').padStart(6, '0');
+    return [s.slice(0, 3), s.slice(3, 6)];
+  }
+
+  function renderStats() {
+    try {
+      const rows = window.LOTTO_DATA;
+      if (!rows || !Array.isArray(rows) || rows.length === 0) {
+        document.getElementById('status').innerText = '⚠️ ไม่พบข้อมูลในตัวแปร LOTTO_DATA';
+        return;
+      }
+
+      const latestRow = rows.slice(-1).shift();
+      const latestDate = String(getItem(latestRow, 1));
+
+      document.getElementById('status').innerText = '✅ อัปเดตข้อมูลสถิติล่าสุดเรียบร้อย (ระบบอัตโนมัติ 100%)';
+      document.getElementById('meta-info').innerHTML = `ฐานข้อมูลคำนวณ: <strong>${rows.length} งวดย้อนหลัง</strong> | งวดอ้างอิงล่าสุด: <strong>${latestDate}</strong>`;
+      document.getElementById('next-draw').innerText = `🎯 เป้าหมายวิเคราะห์สถิติ: งวดวันที่ ${getNextDrawDate(latestDate)}`;
+
+      const freq2 = {}, freqF3 = {}, freqB3 = {};
+      const digitPos = [{}, {}, {}, {}, {}, {}];
+
+      rows.forEach(function(r) {
+        const p1 = String(getItem(r, 2)).replace(/[^0-9]/g, '').padStart(6, '0');
+        for (let i = 0; i < 6; i++) {
+          const d = p1.charAt(i);
+          const posObj = getItem(digitPos, i);
+          posObj[d] = (posObj[d] || 0) + 1;
+        }
+        splitThreeDigits(getItem(r, 3)).forEach(function(n) { if (n) freqF3[n] = (freqF3[n] || 0) + 1; });
+        splitThreeDigits(getItem(r, 4)).forEach(function(n) { if (n) freqB3[n] = (freqB3[n] || 0) + 1; });
+        const b2 = String(getItem(r, 5)).replace(/[^0-9]/g, '').padStart(2, '0');
+        freq2[b2] = (freq2[b2] || 0) + 1;
+      });
+
+      const best6 = digitPos.map(function(pos) {
+        const sorted = Object.entries(pos).sort(function(a, b) { return getItem(b, 1) - getItem(a, 1); });
+        const top = sorted.shift();
+        return top ? getItem(top, 0) : '0';
+      }).join('');
+      document.getElementById('pick-6').innerText = best6;
+
+      const sort2 = Object.entries(freq2).sort(function(a, b) { return getItem(b, 1) - getItem(a, 1); });
+      const top2 = getItem(sort2, 0);
+      document.getElementById('pick-2').innerText = getItem(top2, 0);
+      document.getElementById('desc-2').innerText = `ออกซ้ำสูงสุด ${getItem(top2, 1)} ครั้ง`;
+
+      const sortF3 = Object.entries(freqF3).sort(function(a, b) { return getItem(b, 1) - getItem(a, 1); });
+      const topF3 = getItem(sortF3, 0);
+      document.getElementById('pick-f3').innerText = getItem(topF3, 0);
+      document.getElementById('desc-f3').innerText = `ออกซ้ำสูงสุด ${getItem(topF3, 1)} ครั้ง`;
+
+      const sortB3 = Object.entries(freqB3).sort(function(a, b) { return getItem(b, 1) - getItem(a, 1); });
+      const topB3 = getItem(sortB3, 0);
+      document.getElementById('pick-b3').innerText = getItem(topB3, 0);
+      document.getElementById('desc-b3').innerText = `ออกซ้ำสูงสุด ${getItem(topB3, 1)} ครั้ง`;
+
+      document.getElementById('rank-2').innerHTML = sort2.slice(0, 5).map(function(item, idx) {
