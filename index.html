@@ -45,7 +45,7 @@
   </div>
 
   <div class="box">
-    <div class="status-bar" id="status">⏳ กำลังคำนวณตัวเลขสถิติ 30 งวดย้อนหลัง...</div>
+    <div class="status-bar" id="status">⏳ กำลังโหลดข้อมูล...</div>
     <p id="meta-info" style="font-size: 14px; color: #475569;">ฐานข้อมูลคำนวณ: <strong>30 งวดย้อนหลัง</strong> | ข้อมูลล่าสุด: <strong>กำลังโหลด...</strong></p>
     <div class="next-target" id="next-draw">🎯 เป้าหมายวิเคราะห์สถิติ: กำลังคำนวณงวดถัดไป...</div>
 
@@ -95,6 +95,7 @@
   <p style="margin-top: 15px;">© 2026 AI Lotto Analytics | <a href="https://line.me" style="color: #1e3a8a;">ติดต่อลงโฆษณา / สอบถามข้อมูล</a></p>
 </div>
 
+<script src="data.js"></script>
 <script>
   function getItem(arr, index) {
     return arr.slice(index, index + 1).shift();
@@ -121,8 +122,9 @@
     return [s.slice(0, 3), s.slice(3, 6)];
   }
 
-  function processLottoRows(rows) {
-    if (!rows || rows.length === 0) return;
+  (function() {
+    const rows = window.LOTTO_DATA;
+    if (!rows || !Array.isArray(rows) || rows.length === 0) return;
 
     const latestRow = rows.slice(-1).shift();
     const latestDate = String(getItem(latestRow, 1));
@@ -178,8 +180,8 @@
         <span class="pill">ออกซ้ำ ${count} ครั้ง</span>
       </li>`;
     }).join('');
-  }
+  })();
+</script>
 
-  // รับข้อมูลผ่าน Google Visualization JSONP (ทำงานได้ 100% ทุกเบราว์เซอร์)
-  window.google = { visualization: { Query: { setResponse: function(json) {
-    const allRows = json.table.rows.map(function(row) {
+</body>
+</html>
